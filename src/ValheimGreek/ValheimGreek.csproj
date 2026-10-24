@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>ValheimGreek</RootNamespace>
+    <Version>0.1.0</Version>
+    <AssemblyName>ValheimGreek</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ValheimGreek.Core\ValheimGreek.Core.csproj" />
+    <Reference Include="BepInEx">
+      <HintPath>$(BepInExDir)/core/BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(BepInExDir)/core/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="assembly_valheim">
+      <HintPath>$(ManagedDir)/assembly_valheim.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="assembly_utils">
+      <HintPath>$(ManagedDir)/assembly_utils.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(ManagedDir)/UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(ManagedDir)/UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(ManagedDir)/UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(ManagedDir)/UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(ManagedDir)/UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(ManagedDir)/UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(ManagedDir)/Unity.TextMeshPro.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <Target Name="ExportDictionary" AfterTargets="Build" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Error Condition="!Exists('$(Greek3Root)/words')" Text="Greek3 words not found: $(Greek3Root)/words" />
+    <Exec Command="&quot;$(DotNetExe)&quot; run --project &quot;$(MSBuildThisFileDirectory)../ValheimGreek.Export/ValheimGreek.Export.csproj&quot; -c $(Configuration) -- &quot;$(Greek3Root)/words&quot; &quot;$(TargetDir)dictionary.json&quot;" />
+  </Target>
+  <Target Name="CopyMod" AfterTargets="ExportDictionary" Condition="Exists('$(BepInExDir)/core/BepInEx.dll')">
+    <MakeDir Directories="$(PluginsOut)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginsOut)" />
+    <Copy SourceFiles="$(TargetDir)ValheimGreek.Core.dll" DestinationFolder="$(PluginsOut)" />
+    <Copy SourceFiles="$(TargetDir)dictionary.json" DestinationFolder="$(PluginsOut)" Condition="Exists('$(TargetDir)dictionary.json')" />
+  </Target>
+</Project>

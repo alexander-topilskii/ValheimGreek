@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <!-- Скопируйте этот файл в Directory.Build.props и укажите локальные пути. -->
+    <ValheimDir Condition="'$(ValheimDir)' == ''">/path/to/Valheim</ValheimDir>
+    <BepInExDir Condition="'$(BepInExDir)' == ''">$(ValheimDir)/BepInEx</BepInExDir>
+    <ManagedDir Condition="'$(ManagedDir)' == ''">$(ValheimDir)/valheim.app/Contents/Resources/Data/Managed</ManagedDir>
+    <Greek3Root Condition="'$(Greek3Root)' == ''">$(MSBuildThisFileDirectory)../Greek3</Greek3Root>
+    <PluginsOut Condition="'$(PluginsOut)' == ''">$(BepInExDir)/plugins/ValheimGreek</PluginsOut>
+    <DotNetExe Condition="'$(DotNetExe)' == ''">dotnet</DotNetExe>
+  </PropertyGroup>
+</Project>
